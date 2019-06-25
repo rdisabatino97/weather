@@ -1,0 +1,144 @@
+<html>
+
+<head>
+    <title>Meteo interpreter</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=false">
+    <style>
+        @media screen and (min-width: 800px) {
+            .desktop {
+                margin-top: 30%;
+                margin-left: 12%;
+            }
+        }
+
+        @media screen and (max-width:799px) {
+            .desktop {
+                margin-top: 60%;
+                margin-left: 5%;
+            }
+        }
+    </style>
+</head>
+
+<body id="body">
+    <div id="main" class="container not-mobile desktop"
+        style="background: transparent; position: absolute; width: 100%;">
+        <center>
+            <div style="width:100%">
+                <center style="position: relative;">
+                    <div style="width: 100%" class="field has-addons">
+                        <div style="width: 80%" class="control">
+                            <input id="city" class="input is-medium" type="text" placeholder="City, Region">
+                        </div>
+                        <button id="btn" onclick="showMeteo($('#city').val())"
+                            class="button is-medium is-info has-icon"><i class="fas fa-arrow-right"></i></button>
+                    </div>
+                    <b id="error" style="color: red; margin-left: -10%; background-color: white;"></b>
+                </center>
+            </div>
+        </center>
+    </div>
+    <div class="card" style="display: none; background-color: white; top:6%;" id="result">
+        <div class="card-body">
+            <center>
+                <h1 class="title is-4" id="cityName"></h1>
+            </center>
+            <div id="appender"></div>
+        </div>
+    </div>
+    <div style="width: 100%; height: 30px; position: fixed; bottom: 0;" class="card">
+        <div class="card-body">
+            <p>&copy; 2019. Riccardo Di Sabatino</p>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/dd834f7aad.js"></script>
+
+    <script>
+        let WeatheriKey = "https://api.apixu.com/v1/current.json?key=08d6748dc7af4e20bd8153307192506&q=";
+        let imageKey = "https://pixabay.com/api/?key=12873518-f2df34c7aece959a01dda91c6&q=";
+        var initWidth;
+
+        $.ajax({
+            url: imageKey + 'weather',
+            type: 'GET',
+            dataType: 'JSON',
+            success: function (data) {
+                console.log(data);
+                var counter = data.hits.length;
+                var random = Math.floor(Math.random() * counter);
+                $('#body').css('background-image', 'url(' + data.hits[random].largeImageURL + ')').css(
+                    'background-repeat', 'norepeat').css('background-size', 'cover');
+            },
+            error: function (error) {
+                console.log(error);
+
+            }
+        })
+
+        function showMeteo(city) {
+            $('#appender').empty();
+            $('#error').text("");
+            $.ajax({
+                url: WeatheriKey + city,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    var main = $('#main');
+                    var width = main.css('margin-top');
+                    initWidth = width;
+                    main.animate({
+                        'margin-top': '-=' + width
+                    }, 1500);
+                    $('#cityName').text(data.location.name + ', ' + data.location.region);
+                    $('#result').show(1500, function () {})
+                    $('#appender').append(
+                        '<div><center><img style="width:64px; width:64px;" src="https://' + data.current
+                        .condition.icon + '"/><b>' + data.current.feelslike_c + '°C</b><br><h4>' + data
+                        .current.condition.text + '</h4></center></div>');
+                    $('#btn > i.fas').removeClass('fa-arrow-right').addClass('fa-times');
+                    $('#btn').removeClass('is-info').addClass('is-danger').attr('onclick', 'restore()');
+                    $.ajax({
+                        url: imageKey + city,
+                        type: 'GET',
+                        dataType: 'JSON',
+                        success: function (data) {
+                            var counter = data.hits.length;
+                            var random = Math.floor(Math.random() * counter);
+                            $('#body').css('background-image', 'url(' + data.hits[random]
+                                .largeImageURL + ')').css(
+                                'background-repeat', 'norepeat').css('background-size',
+                                'cover');
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    })
+                },
+                error: function (error) {
+                    $('#error').text("This city is not in our database");
+                }
+            })
+            /*
+                ELEGUI RICHIESTA GET PER OTTENERE UN'IMMAGINE DELLA CITTA
+            */
+        }
+
+        function restore() {
+            $('#result').hide(1500, function () {});
+            $('#main').animate({
+                'margin-top': '+=' + initWidth
+            }, 1500);
+            $('#btn > i.fas').removeClass('fa-times').addClass('fa-arrow-right');
+            $('#btn').removeClass('is-danger').addClass('is-info').attr('onclick',
+                "showMeteo($('#city').val(),$('#nation').val())");
+            $('#city').val("");
+        }
+    </script>
+</body>
+
+</html>
