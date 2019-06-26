@@ -11,7 +11,8 @@
                 margin-top: 30%;
                 margin-left: 12%;
             }
-            .margins{
+
+            .margins {
                 margin-left: 50px;
                 margin-right: 50px;
             }
@@ -46,6 +47,7 @@
     </div>
     <div class="card margins" style="display: none; background-color: white; top:10%;" id="result">
         <div class="card-body">
+            <br>
             <center>
                 <h1 class="title is-4" id="cityName"></h1>
             </center>
@@ -55,6 +57,20 @@
     <div style="width: 100%; height: 30px; position: fixed; bottom: 0;" class="card">
         <div class="card-body">
             <p>&copy; 2019. Riccardo Di Sabatino</p>
+        </div>
+    </div>
+    <div class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p id="modalTitle" class="modal-card-title">Modal title</p>
+                <button class="delete" aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+                <div id="paragraph"></div>
+            </section>
+            <footer class="modal-card-foot">
+            </footer>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -87,6 +103,9 @@
         function showMeteo(city) {
             $('#appender').empty();
             $('#error').text("");
+            city = String(city);
+            city = city.replace(' ', '+');
+            console.log(city);
             $.ajax({
                 url: forecastKey + city + '&days=3',
                 type: 'GET',
@@ -103,32 +122,44 @@
                     $('#cityName').text(data.location.name + ', ' + data.location.region);
                     $('#result').show(1500, function () {})
                     $('#appender').append(
-                        '<div class="container"><center><img style="width:64px; width:64px;" src="https://' + data.current
-                        .condition.icon + '"/><br><b class="title is-6">' + data.current.feelslike_c + '°C</b><br><h4 class="title is-5">' + data
+                        '<div class="container"><center><img style="width:64px; width:64px;" src="https://' +
+                        data.current
+                        .condition.icon + '"/><br><b class="title is-6">' + data.current.feelslike_c +
+                        '°C</b><br><h4 class="title is-5">' + data
                         .current.condition.text +
                         '</h4></center></div><br><hr><div class="container"><center><h2 class="title is-4">Next days forecast</h2></center><br><table class="table is-fullwidth"><tbody id="next"></tbody></table></div>'
-                        );
-                            data.forecast.forecastday.forEach(intro => {
-                                $('#next').append('<tr><td><img src="https://'+intro.day.condition.icon+'"><td><b>'+intro.day.condition.text+'</b></td><td><b>Max: </b>'+intro.day.maxtemp_c+'°C</td><td><b>Min: </b>'+intro.day.mintemp_c+'°C</td><td id="uvRate-'+intro.date+'"></td></tr>')
-                                if(intro.day.uv > 0 && intro.day.uv < 3){
-                                    $('#uvRate-'+intro.date).append("<b>UV OK ("+intro.day.uv+")</b>").css('color','green');
-                                }
-                                else if(intro.day.uv >= 3 && intro.day.uv <6){
-                                    $('#uvRate-'+intro.date).append("<b>UV Moderate ("+intro.day.uv+")</b>").css('color','yellow');
-                                }
-                                else if(intro.day.uv >=6 && intro.day.uv < 8){
-                                    $('#uvRate-'+intro.date).append("<b>UV High ("+intro.day.uv+")</b>").css('color','orange');
-                                }
-                                else if(intro.day.uv >=8 && intro.day.uv <10){
-                                    $('#uvRate-'+intro.date).append("<b>UV Very High ("+intro.day.uv+")</b>").css('color','red');
-                                }
-                                else if(intro.day.uv >= 10){
-                                    $('#uvRate-'+intro.date).append("<b>UV Too high ("+intro.day.uv+")</b>").css('color','purple');
-                                }
-                                else{
-                                    $('#uvRate-'+intro.date).append("<b>UV N/D</b>").css('color','black');
-                                }
-                            });
+                    );
+                    data.forecast.forecastday.forEach(intro => {
+                        $('#next').append('<tr><td><img src="https://' + intro.day.condition.icon +
+                            '"><td><b>' + intro.day.condition.text +
+                            '</b></td><td><b>Max: </b>' + intro.day.maxtemp_c +
+                            '°C</td><td><b>Min: </b>' + intro.day.mintemp_c +
+                            '°C</td><td id="uvRate-' + intro.date + '"></td></tr>')
+                        if (intro.day.uv > 0 && intro.day.uv < 3) {
+                            $('#uvRate-' + intro.date).append("<b>UV OK (" + intro.day.uv + ")</b>")
+                                .css('color', 'green').css('cursor', 'pointer').attr('onclick',
+                                    'suggestions("1")');
+                        } else if (intro.day.uv >= 3 && intro.day.uv < 6) {
+                            $('#uvRate-' + intro.date).append("<b>UV Moderate (" + intro.day.uv +
+                                ")</b>").css('color', 'yellow').css('cursor', 'pointer').attr(
+                                'onclick', 'suggestions("2")');
+                        } else if (intro.day.uv >= 6 && intro.day.uv < 8) {
+                            $('#uvRate-' + intro.date).append("<b>UV High (" + intro.day.uv +
+                                ")</b>").css('color', 'orange').css('cursor', 'pointer').attr(
+                                'onclick', 'suggestions("3")');
+                        } else if (intro.day.uv >= 8 && intro.day.uv < 10) {
+                            $('#uvRate-' + intro.date).append("<b>UV Very High (" + intro.day.uv +
+                                ")</b>").css('color', 'red').css('cursor', 'pointer').attr(
+                                'onclick', 'suggestions("4")');
+                        } else if (intro.day.uv >= 10) {
+                            $('#uvRate-' + intro.date).append("<b>UV Too high (" + intro.day.uv +
+                                ")</b>").css('color', 'purple').css('cursor', 'pointer').attr(
+                                'onclick', 'suggestions("5")');
+                        } else {
+                            $('#uvRate-' + intro.date).append("<b>UV N/D</b>").css('color',
+                            'black');
+                        }
+                    });
                     $('#btn > i.fas').removeClass('fa-arrow-right').addClass('fa-times');
                     $('#btn').removeClass('is-info').addClass('is-danger').attr('onclick', 'restore()');
                     $.ajax({
@@ -151,6 +182,7 @@
                 },
                 error: function (error) {
                     console.log(error);
+                    $('#error').text("This city is not in our database");
                 }
             })
         }
@@ -165,11 +197,48 @@
                 "showMeteo($('#city').val(),$('#nation').val())");
             $('#city').val("");
         }
-        $('#city').keydown(function(e){
-            if(e.keyCode==13){
+        $('#city').keydown(function (e) {
+            if (e.keyCode == 13) {
                 $('#btn').click();
             }
         })
+
+        function suggestions(type) {
+            $('#paragraph').empty();
+            switch (type) {
+                case '1':
+                $('#paragraph').append('<ol><li>Avoid going out during the hottest hours</li><li>Put your sunglasses and hat on</li></ol>');
+                $('#modalTitle').text("Normal condition");
+                $('.modal').addClass('is-active');
+                break;
+                case '2':
+                $('#paragraph').append('<ol><li>Avoid going out during the hottest hours</li><li>Put your sunglasses and hat on</li></ol>');
+                $('#modalTitle').text("Normal condition");
+                $('.modal').addClass('is-active');
+                break;
+                case '3':
+                $('#paragraph').append('<ol><li>Avoid going out during the hottest hours</li><li>Put your sunglasses and hat on</li><li>Use the sunscreen every 80 minutes</li><li>Keep your body hydratated</li></ol>');
+                $('#modalTitle').text("High conditions");
+                $('.modal').addClass('is-active');
+                break;
+                case '4':
+                $('#paragraph').append('<ol><li>Avoid going out during the hottest hours</li><li>Put your sunglasses and hat on</li><li>Use the sunscreen every 80 minutes</li><li>Keep your body hydratated</li><li>Prevent to stay too many hours at the beach</li></ol>');
+                $('#modalTitle').text("Too high");
+                $('.modal').addClass('is-active');
+                break;
+                case '5':
+                $('#paragraph').append('<ol><li>Avoid going out during the hottest hours</li><li>Put your sunglasses and hat on</li><li>Use the sunscreen every 80 minutes</li><li>Keep your body hydratated</li><li>Prevent to going out during the day.</li></ol>');
+                $('#modalTitle').text("Extreme conditions");
+                $('.modal').addClass('is-active');
+                break;
+            }
+        }
+
+        $('.delete').click(function(){
+            $('.modal').removeClass('is-active');
+        })
+
+        
     </script>
 </body>
 
