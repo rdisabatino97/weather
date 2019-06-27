@@ -23,7 +23,8 @@
                 margin-top: 40%;
                 margin-left: 5%;
             }
-            .margins{
+
+            .margins {
                 margin-left: 20px;
                 margin-right: 20px;
             }
@@ -47,7 +48,11 @@
                         <button id="btn" onclick="showMeteo($('#city').val())"
                             class="button is-medium is-info has-icon"><i class="fas fa-arrow-right"></i></button>
                     </div>
-                    <center id="getByIP" style="margin-left: -10%; display: none;"><b style="color: white;"><i id="locator" style="color: green" class="fas fa-location-arrow"></i> <span id="explanation">Position got by your IP:</span> <span id="ipaddr"></span></b><br> <a id="disabler" class="button is-rounded is-info" onclick="disable()">Disable IP searching</a></center>
+                    <center id="getByIP" style="margin-left: -10%; display: none;"><b style="color: white;"><i
+                                id="locator" style="color: green" class="fas fa-location-arrow"></i> <span
+                                id="explanation">Position got by your IP:</span> <span id="ipaddr"></span></b><br> <a
+                            id="disabler" class="button is-rounded is-info" onclick="disable()">Disable IP searching</a>
+                    </center>
                     <b id="error" style="color: red; margin-left: -10%; background-color: white;"></b>
                 </center>
             </div>
@@ -63,7 +68,8 @@
         </div>
     </div>
     <div class="container" style="width: 100%">
-        <center id="author"><b style="color: white; bottom: 0; position: fixed; margin-left: -50%; width: 100%;">&copy; 2019. Riccardo Di Sabatino</b></center>
+        <center id="author"><b style="color: white; bottom: 0; position: fixed; margin-left: -50%; width: 100%;">&copy;
+                2019. Riccardo Di Sabatino</b></center>
     </div>
     <div class="modal">
         <div class="modal-background"></div>
@@ -90,33 +96,38 @@
         var initWidth;
 
 
-        $(document).ready(function(){
+        $(document).ready(function () {
             getIP();
         })
 
-        function getIP(){
+        function getIP() {
             $.ajax({
-                url:'https://jsonip.com?callback=?',
-                type:'GET',
-                dataType:'json',
-                success:function(data){
+                url: 'https://jsonip.com?callback=?',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
                     $.ajax({
-                        url:'https://ipapi.co/'+data.ip+'/json/',
-                        type:'GET',
-                        dataType:'json',
-                        success:function(info){
-                            console.log(info);
+                        url: 'https://ipapi.co/' + data.ip + '/json/',
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (info) {
                             $('#city').val(info.city);
                             $('#ipaddr').text(data.ip);
-                            $('#getByIP').css('display','block');
+                            $('#getByIP').css('display', 'block');
                         },
-                        error:function(error){
-                            console.log(error);
+                        error: function (error) {
+                            $('#locator').css('color', 'red');
+                            $('#explanation').text("Error while finding your position...");
+                            $('#ipaddr').text("");
+                            $('#getByID').css('display', 'block');
                         }
                     })
                 },
-                error:function(error){
-                    console.log(error);
+                error: function (error) {
+                    $('#locator').css('color', 'red');
+                    $('#explanation').text("Error while finding your position...");
+                    $('#ipaddr').text("");
+                    $('#getByID').css('display', 'block');
                 }
             })
         }
@@ -125,14 +136,14 @@
             type: 'GET',
             dataType: 'JSON',
             success: function (data) {
-                console.log(data);
                 var counter = data.hits.length;
                 var random = Math.floor(Math.random() * counter);
                 $('#body').css('background-image', 'url(' + data.hits[random].largeImageURL + ')').css(
                     'background-repeat', 'norepeat').css('background-size', 'cover');
             },
             error: function (error) {
-                console.log(error);
+                $('#body').css('background-image', 'url("default.PNG")').css(
+                    'background-repeat', 'norepeat').css('background-size', 'cover');
 
             }
         })
@@ -142,14 +153,13 @@
             $('#error').text("");
             city = String(city);
             city = city.replace(' ', '+');
-            console.log(city);
             $.ajax({
                 url: forecastKey + city + '&days=3',
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    $('#logo').slideUp(1500,function(){});
-                    $('#getByIP').css('display','none');
+                    $('#logo').slideUp(1500, function () {});
+                    $('#getByIP').css('display', 'none');
                     var main = $('#main');
                     var width = main.css('margin-top');
                     initWidth = width;
@@ -193,19 +203,18 @@
                                 'onclick', 'suggestions("5")');
                         } else {
                             $('#uvRate-' + intro.date).append("<b>UV N/D</b>").css('color',
-                            'black');
+                                'black');
                         }
                     });
                     $('#btn > i.fas').removeClass('fa-arrow-right').addClass('fa-times');
                     $('#btn').removeClass('is-info').addClass('is-danger').attr('onclick', 'restore()');
-                    $('#author').css('display','none');
+                    $('#author').css('display', 'none');
                     $('#result').slideDown(1500, function () {})
                     $.ajax({
                         url: imageKey + city,
                         type: 'GET',
                         dataType: 'JSON',
                         success: function (data) {
-                            console.log(data);
                             var counter = data.hits.length;
                             var random = Math.floor(Math.random() * counter);
                             $('#body').css('background-image', 'url(' + data.hits[random]
@@ -214,12 +223,13 @@
                                 'cover');
                         },
                         error: function (error) {
-                            console.log(error);
+                            $('#body').css('background-image', 'url("default.png")').css(
+                                'background-repeat', 'norepeat').css('background-size',
+                                'cover');
                         }
                     })
                 },
                 error: function (error) {
-                    console.log(error);
                     $('#error').text("This city is not in our database");
                 }
             })
@@ -234,9 +244,9 @@
             $('#btn').removeClass('is-danger').addClass('is-info').attr('onclick',
                 "showMeteo($('#city').val(),$('#nation').val())");
             $('#city').val("");
-            $('#getByIP').css('display','block');
-            $('#logo').slideDown(1500,function(){});
-            $('#author').css('display','block');
+            $('#getByIP').css('display', 'block');
+            $('#logo').slideDown(1500, function () {});
+            $('#author').css('display', 'block');
         }
         $('#city').keydown(function (e) {
             if (e.keyCode == 13) {
@@ -248,59 +258,69 @@
             $('#paragraph').empty();
             switch (type) {
                 case '1':
-                $('#paragraph').append('<ol><li>Avoid going out during the hottest hours</li><li>Put your sunglasses and hat on</li></ol>');
-                $('#modalTitle').text("Normal condition");
-                $('.modal').addClass('is-active');
-                break;
+                    $('#paragraph').append(
+                        '<ol><li>Avoid going out during the hottest hours</li><li>Put your sunglasses and hat on</li></ol>'
+                    );
+                    $('#modalTitle').text("Normal condition");
+                    $('.modal').addClass('is-active');
+                    break;
                 case '2':
-                $('#paragraph').append('<ol><li>Avoid going out during the hottest hours</li><li>Put your sunglasses and hat on</li></ol>');
-                $('#modalTitle').text("Normal condition");
-                $('.modal').addClass('is-active');
-                break;
+                    $('#paragraph').append(
+                        '<ol><li>Avoid going out during the hottest hours</li><li>Put your sunglasses and hat on</li></ol>'
+                    );
+                    $('#modalTitle').text("Normal condition");
+                    $('.modal').addClass('is-active');
+                    break;
                 case '3':
-                $('#paragraph').append('<ol><li>Avoid going out during the hottest hours</li><li>Put your sunglasses and hat on</li><li>Use the sunscreen every 80 minutes</li><li>Keep your body hydratated</li></ol>');
-                $('#modalTitle').text("High conditions");
-                $('.modal').addClass('is-active');
-                break;
+                    $('#paragraph').append(
+                        '<ol><li>Avoid going out during the hottest hours</li><li>Put your sunglasses and hat on</li><li>Use the sunscreen every 80 minutes</li><li>Keep your body hydratated</li></ol>'
+                    );
+                    $('#modalTitle').text("High conditions");
+                    $('.modal').addClass('is-active');
+                    break;
                 case '4':
-                $('#paragraph').append('<ol><li>Avoid going out during the hottest hours</li><li>Put your sunglasses and hat on</li><li>Use the sunscreen every 80 minutes</li><li>Keep your body hydratated</li><li>Prevent to stay too many hours at the beach</li></ol>');
-                $('#modalTitle').text("Too high");
-                $('.modal').addClass('is-active');
-                break;
+                    $('#paragraph').append(
+                        '<ol><li>Avoid going out during the hottest hours</li><li>Put your sunglasses and hat on</li><li>Use the sunscreen every 80 minutes</li><li>Keep your body hydratated</li><li>Prevent to stay too many hours at the beach</li></ol>'
+                    );
+                    $('#modalTitle').text("Too high");
+                    $('.modal').addClass('is-active');
+                    break;
                 case '5':
-                $('#paragraph').append('<ol><li>Avoid going out during the hottest hours</li><li>Put your sunglasses and hat on</li><li>Use the sunscreen every 80 minutes</li><li>Keep your body hydratated</li><li>Prevent to going out during the day.</li></ol>');
-                $('#modalTitle').text("Extreme conditions");
-                $('.modal').addClass('is-active');
-                break;
+                    $('#paragraph').append(
+                        '<ol><li>Avoid going out during the hottest hours</li><li>Put your sunglasses and hat on</li><li>Use the sunscreen every 80 minutes</li><li>Keep your body hydratated</li><li>Prevent to going out during the day.</li></ol>'
+                    );
+                    $('#modalTitle').text("Extreme conditions");
+                    $('.modal').addClass('is-active');
+                    break;
             }
         }
 
-        $('.delete').click(function(){
+        $('.delete').click(function () {
             $('.modal').removeClass('is-active');
         })
-        $('#city').keydown(function(ev){
-            if(ev.keyCode != 13 && $('#appender').children().length >1){
+        $('#city').keydown(function (ev) {
+            if (ev.keyCode != 13 && $('#appender').children().length > 1) {
                 $('#btn').click();
                 $('#error').text("");
             }
         })
-        function disable(){
-            $('#locator').css('color','red');
+
+        function disable() {
+            $('#locator').css('color', 'red');
             $('#explanation').text("Searching by IP is now disabled");
             $('#ipaddr').text("");
             $('#disabler').text("Enable searching by IP");
-            $('#disabler').attr('onclick','restoreIP()');
+            $('#disabler').attr('onclick', 'restoreIP()');
             $('#city').val("");
         }
 
-        function restoreIP(){
-            $('#locator').css('color','green');
+        function restoreIP() {
+            $('#locator').css('color', 'green');
             $('#explanation').text("Position got by your IP: ");
             $('#disabler').text("Disable IP searching");
-            $('#disabler').attr('onclick','disable()');
+            $('#disabler').attr('onclick', 'disable()');
             getIP();
         }
-        
     </script>
 </body>
 
