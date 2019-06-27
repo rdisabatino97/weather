@@ -104,7 +104,7 @@
                 dataType:'json',
                 success:function(data){
                     $.ajax({
-                        url:'http://ip-api.com/json/'+data.ip,
+                        url:'https://ipapi.co/'+data.ip+'/json',
                         type:'GET',
                         dataType:'json',
                         success:function(info){
