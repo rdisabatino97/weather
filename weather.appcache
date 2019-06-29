@@ -1,0 +1,9 @@
+CACHE MANIFEST
+
+# Author: Riccardo Di Sabatino https://github.io/rdisabatino97
+# Version: 1.0
+index.html
+logo.png
+https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css
+https://code.jquery.com/jquery-3.4.1.min.js
+https://kit.fontawesome.com/dd834f7aad.js
