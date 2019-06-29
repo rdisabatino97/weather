@@ -5,6 +5,13 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#344e5d">
+    <meta name="theme-color" content="#ffffff">
     <style>
         @media screen and (min-width: 800px) {
             .desktop {
@@ -71,16 +78,20 @@
         </div>
     </div>
     <div class="container" style="width: 100%">
-        <center id="author"><b style="color: white; bottom: 0px; position: fixed; margin-left: -50%; width: 100%;">&copy;
+        <center id="author"><b
+                style="color: white; bottom: 0px; position: fixed; margin-left: -50%; width: 100%;">&copy;
                 2019. Riccardo Di Sabatino</b></center>
     </div>
     <div class="columns">
-            <div id="cookies" class="column is-full"
+        <div id="cookies" class="column is-full"
             style="height: 60%; right: 0; left: 0; bottom: 0px; position: absolute; display: none; background-color: rgba(0,0,0, 0.8)">
             <div id="animator" class="container">
-                <center style="margin-top:10px; color: white; text-align: justify; margin-left: 5px; margin-right: 5px;">
-                    <p>According to European law all sites must request authorization for the use of cookies, technical and
-                        third-party that they use.<br>In this case, no cookies are used.<br>This acceptance is stored as a
+                <center
+                    style="margin-top:10px; color: white; text-align: justify; margin-left: 5px; margin-right: 5px;">
+                    <p>According to European law all sites must request authorization for the use of cookies, technical
+                        and
+                        third-party that they use.<br>In this case, no cookies are used.<br>This acceptance is stored as
+                        a
                         key in your browser using localStorage.<br>If you do not agree, please exit this site
                         immediately.<br><br>Riccardo Di Sabatino <br> <i>(The Webmaster)</i> </p>
                 </center>
@@ -351,7 +362,7 @@
                 $('#animator').empty();
                 $('#animator').append(
                     '<br><br><center><i style="color:white; font-size:40px;" class="fas fa-check"></i><br><br><b style="color:white; font-size:30px; ">Thank you!</b></center>'
-                    )
+                )
                 $('#animator').fadeIn(1500, function () {
                     setTimeout(function () {
                         $('#cookies').slideUp(function () {});
